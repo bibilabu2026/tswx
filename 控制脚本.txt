@@ -6740,11 +6740,13 @@ function _wxBuildEntryForAPI(entry, namePrefix, forceDisabled) {
   var stratType = entry.constant ? 'constant' : (entry.selective ? 'selective' : 'constant');
   var keys = entry.key || [];
   var keysecondary = entry.keysecondary || [];
+  var _logicMap = { 0: 'and_any', 1: 'not_all', 2: 'not_any', 3: 'and_all' };
+  var secondaryLogic = _logicMap[entry.selectiveLogic || 0] || 'and_any';
   return {
     name: namePrefix + (entry.comment || entry.name || ''),
     content: entry.content || '',
     enabled: forceDisabled ? false : !entry.disable,
-    strategy: { type: stratType, keys: keys, keysecondary: keysecondary, selectiveLogic: entry.selectiveLogic || 0 },
+    strategy: { type: stratType, keys: keys, keys_secondary: { logic: secondaryLogic, keys: keysecondary } },
     position: posObj,
     probability: entry.probability || 100,
     recursion: {
